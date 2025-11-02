@@ -1,15 +1,17 @@
 """
-Example usage of TripAdvisor Scraper with LLM integration
-This demonstrates how to use the scraper and prepare data for LLM analysis
+Thrillophilia Web Scraper - Example Usage
+This demonstrates how to scrape Thrillophilia pages and prepare data for LLM analysis
 """
 
-from tripadvisor_scraper import TripAdvisorScraper
 import json
+import requests
+from bs4 import BeautifulSoup
+import time
 
 
 def basic_scraping_example():
-    """Basic example of scraping a single page - extracting 'Places to Visit' section."""
-    print("Example 1: Basic Scraping - Places to Visit")
+    """Scrape Thrillophilia 'Things to Do' page and extract all attractions."""
+    print("Example 1: Thrillophilia Scraping - Things to Do in Pune")
     print("-" * 50)
     
     # Thrillophilia Pune attractions page
@@ -22,10 +24,6 @@ def basic_scraping_example():
     }
     
     # Use a session for better connection handling
-    import requests
-    from bs4 import BeautifulSoup
-    import time
-    
     session = requests.Session()
     session.headers.update(headers)
     
@@ -194,14 +192,13 @@ def basic_scraping_example():
         
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 403:
-            print("\n⚠️  403 Forbidden Error - TripAdvisor is blocking the request")
+            print("\n⚠️  403 Forbidden Error - Thrillophilia is blocking the request")
             print("\nPossible solutions:")
             print("1. Try using a VPN or proxy")
             print("2. Use Selenium with a real browser (headless or visible)")
             print("3. Add random delays between requests")
             print("4. Try from a different IP address")
-            print("5. Consider using TripAdvisor's official API if available")
-            print("\nFor now, try using Selenium - uncomment the selenium_scraping_example() below")
+            print("\nFor now, try using Selenium - see selenium_scraper.py")
         else:
             print(f"\nHTTP Error: {e}")
         return None
@@ -212,146 +209,144 @@ def basic_scraping_example():
 
 
 def multiple_pages_example():
-    """Example of scraping multiple pages."""
-    print("\n\nExample 2: Scraping Multiple Pages")
+    """Example of scraping multiple Thrillophilia city pages."""
+    print("\n\nExample 2: Scraping Multiple Thrillophilia Pages")
     print("-" * 50)
     
-    scraper = TripAdvisorScraper(delay=2.0)
-    
-    # List of URLs to scrape
+    # List of Thrillophilia URLs to scrape
     urls = [
-        "https://www.tripadvisor.com/Restaurant_Review-g60763-d423942-Reviews-Katz_s_Delicatessen-New_York_City_New_York.html",
-        "https://www.tripadvisor.com/Hotel_Review-g60763-d93452-Reviews-The_Plaza_Hotel-New_York_City_New_York.html",
+        "https://www.thrillophilia.com/things-to-do-in-pune",
+        "https://www.thrillophilia.com/things-to-do-in-mumbai",
     ]
     
-    results = scraper.scrape_multiple_pages(urls)
+    # You can implement multi-page scraping here
+    print("Multi-page scraping: Loop through URLs and call basic_scraping_example() for each")
     
-    print(f"Scraped {len(results)} pages successfully")
-    
-    return results
+    return None
 
 
 def llm_integration_example():
-    """Example of preparing data for LLM analysis."""
-    print("\n\nExample 3: LLM Integration")
+    """Example of preparing Thrillophilia data for LLM analysis."""
+    print("\n\nExample 3: LLM Integration with Thrillophilia Data")
     print("-" * 50)
     
-    scraper = TripAdvisorScraper(delay=2.0)
-    
-    # Scrape a page
-    url = "https://www.tripadvisor.com/Attraction_Review-g293860-d3850906-Reviews-Bagore_Ki_Haveli-Udaipur_Udaipur_District_Rajasthan.html"
-    data = scraper.scrape_page(url)
-    
-    # Format for LLM
-    llm_input = scraper.format_for_llm(data)
-    
-    print("Formatted text for LLM (first 500 chars):")
-    print(llm_input[:500])
-    
-    # Save for LLM processing
-    with open('llm_input.txt', 'w', encoding='utf-8') as f:
-        f.write(llm_input)
-    
-    print("\n\nSaved to llm_input.txt")
-    
-    # This is where you would integrate with your LLM
-    # Example pseudo-code:
-    # llm_response = your_llm.generate(
-    #     prompt=f"Analyze this TripAdvisor page and provide insights:\n\n{llm_input}"
-    # )
-    
-    return llm_input
+    # Load the scraped JSON data
+    try:
+        with open('thrillophilia_pune_attractions.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Format for LLM
+        llm_prompt = f"Here are {data['total_attractions']} things to do in Pune:\n\n"
+        
+        for attraction in data['attractions'][:5]:  # First 5 for example
+            llm_prompt += f"{attraction.get('number', '')}. {attraction['title']}\n"
+            if attraction.get('content'):
+                llm_prompt += f"   {attraction['content']['full_text'][:200]}...\n\n"
+        
+        print("Formatted text for LLM (first 500 chars):")
+        print(llm_prompt[:500])
+        
+        # Save for LLM processing
+        with open('thrillophilia_llm_input.txt', 'w', encoding='utf-8') as f:
+            f.write(llm_prompt)
+        
+        print("\n\nSaved to thrillophilia_llm_input.txt")
+        
+        return llm_prompt
+    except FileNotFoundError:
+        print("Error: thrillophilia_pune_attractions.json not found. Run basic_scraping_example() first.")
+        return None
 
 
 def custom_extraction_example():
-    """Example of using custom extraction methods."""
-    print("\n\nExample 4: Custom Extraction")
+    """Example of extracting specific fields from Thrillophilia data."""
+    print("\n\nExample 4: Custom Data Extraction")
     print("-" * 50)
     
-    scraper = TripAdvisorScraper(delay=2.0)
-    url = "https://www.tripadvisor.com/Hotel_Review-g293860-d302088-Reviews-The_Oberoi_Udaivilas-Udaipur_Udaipur_District_Rajasthan.html"
-    
-    # Fetch the page
-    soup = scraper.fetch_page(url)
-    
-    if soup:
-        # Use individual extraction methods
-        text_content = scraper.extract_text_content(soup)
-        reviews = scraper.extract_reviews(soup)
-        ratings = scraper.extract_ratings_summary(soup)
-        location = scraper.extract_location_info(soup)
+    # Load the scraped JSON data
+    try:
+        with open('thrillophilia_pune_attractions.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
         
-        print(f"Extracted {len(text_content['headings'])} headings")
-        print(f"Extracted {len(reviews)} reviews")
-        print(f"Overall rating: {ratings['overall_rating']}")
-        print(f"Location: {location['address']}")
+        # Extract only titles and links
+        titles_and_links = [
+            {
+                'title': attraction['title'],
+                'link': attraction.get('link', 'No link')
+            }
+            for attraction in data['attractions']
+        ]
+        
+        print(f"Extracted {len(titles_and_links)} titles and links")
+        for item in titles_and_links[:5]:
+            print(f"  - {item['title']}")
+        
+        return titles_and_links
+    except FileNotFoundError:
+        print("Error: thrillophilia_pune_attractions.json not found. Run basic_scraping_example() first.")
+        return None
 
 
 def search_specific_content_example():
-    """Example of searching for specific content in scraped data."""
+    """Example of searching for specific keywords in Thrillophilia content."""
     print("\n\nExample 5: Search Specific Content")
     print("-" * 50)
     
-    scraper = TripAdvisorScraper(delay=2.0)
-    url = "https://www.tripadvisor.com/Restaurant_Review-g293860-d8013938-Reviews-Upre_by_1559_AD-Udaipur_Udaipur_District_Rajasthan.html"
-    
-    data = scraper.scrape_page(url)
-    
-    # Search for reviews mentioning specific keywords
-    keywords = ['food', 'service', 'ambiance']
-    
-    for keyword in keywords:
-        matching_reviews = [
-            review for review in data['reviews']
-            if review.get('text') and keyword.lower() in review['text'].lower()
-        ]
-        print(f"\nReviews mentioning '{keyword}': {len(matching_reviews)}")
+    # Load the scraped JSON data
+    try:
+        with open('thrillophilia_pune_attractions.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Search for attractions mentioning specific keywords
+        keywords = ['camping', 'adventure', 'historical']
+        
+        for keyword in keywords:
+            matching_attractions = [
+                attraction for attraction in data['attractions']
+                if attraction.get('content') and keyword.lower() in attraction['content']['full_text'].lower()
+            ]
+            print(f"\nAttractions mentioning '{keyword}': {len(matching_attractions)}")
+    except FileNotFoundError:
+        print("Error: thrillophilia_pune_attractions.json not found. Run basic_scraping_example() first.")
+        return None
 
 
 def save_structured_data_example():
-    """Example of saving data in different formats."""
+    """Example of saving Thrillophilia data in different formats."""
     print("\n\nExample 6: Save Structured Data")
     print("-" * 50)
     
-    scraper = TripAdvisorScraper(delay=2.0)
-    url = "https://www.tripadvisor.com/Attraction_Review-g293860-d3850906-Reviews-Bagore_Ki_Haveli-Udaipur_Udaipur_District_Rajasthan.html"
-    
-    data = scraper.scrape_page(url)
-    
-    # Save as JSON
-    scraper.save_to_json(data, 'scraped_data.json')
-    
-    # Save reviews separately for easy access
-    reviews_only = {
-        'url': url,
-        'total_reviews': len(data['reviews']),
-        'reviews': data['reviews']
-    }
-    scraper.save_to_json(reviews_only, 'reviews_only.json')
-    
-    # Save LLM-formatted text
-    llm_text = scraper.format_for_llm(data)
-    with open('llm_formatted.txt', 'w', encoding='utf-8') as f:
-        f.write(llm_text)
-    
-    print("Data saved in multiple formats:")
-    print("  - scraped_data.json (complete data)")
-    print("  - reviews_only.json (reviews only)")
-    print("  - llm_formatted.txt (LLM-ready text)")
+    # Load the scraped JSON data
+    try:
+        with open('thrillophilia_pune_attractions.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Save only titles
+        titles_only = {
+            'page_title': data['page_title'],
+            'total': data['total_attractions'],
+            'titles': [attraction['title'] for attraction in data['attractions']]
+        }
+        
+        with open('thrillophilia_titles_only.json', 'w', encoding='utf-8') as f:
+            json.dump(titles_only, f, indent=2, ensure_ascii=False)
+        
+        print("Data saved in different formats:")
+        print("  - thrillophilia_pune_attractions.json (complete data)")
+        print("  - thrillophilia_titles_only.json (titles only)")
+    except FileNotFoundError:
+        print("Error: thrillophilia_pune_attractions.json not found. Run basic_scraping_example() first.")
+        return None
 
 
 if __name__ == "__main__":
-    print("TripAdvisor Scraper - Example Usage")
+    print("Thrillophilia Scraper - Example Usage")
     print("=" * 50)
-    print("\nNote: Replace example URLs with actual TripAdvisor URLs")
-    print("These examples demonstrate different use cases\n")
+    print("\nThis scraper extracts 'Things to Do' data from Thrillophilia")
+    print("Currently configured for: Things to Do in Pune\n")
     
-    # Run examples (comment out the ones you don't want to run)
+    # Run the Thrillophilia scraper
     basic_scraping_example()
-    # multiple_pages_example()
-    # llm_integration_example()
-    # custom_extraction_example()
-    # search_specific_content_example()
-    # save_structured_data_example()
     
-    print("\n\nUncomment the examples you want to run in example_usage.py")
+    print("\n\nScraping completed! Check 'thrillophilia_pune_attractions.json' for full data")
+
