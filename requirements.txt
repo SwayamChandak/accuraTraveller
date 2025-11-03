@@ -1,2 +1,5 @@
 beautifulsoup4==4.12.2
 requests==2.31.0
+
+# For LLM summarization with Ollama
+ollama==0.3.3
