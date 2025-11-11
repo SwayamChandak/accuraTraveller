@@ -1,321 +1,531 @@
-# TripAdvisor Web Scraper
+# AccuraTraveller - AI-Powered Travel Planning Assistant 🌍✈️
 
-A generalized Python web scraper for extracting information from TripAdvisor pages, designed for easy LLM integration.
+An intelligent travel planning system that combines web scraping, LLM-based summarization, and personalized itinerary generation to help users plan perfect trips.
 
-## Features
+## 🎯 Project Vision
 
-- 🔍 **Generalized Scraping**: Works with any TripAdvisor page (hotels, restaurants, attractions, etc.)
-- 📊 **Structured Data Extraction**: Extracts reviews, ratings, amenities, location info, and more
-- 🤖 **LLM-Ready**: Formats data specifically for Large Language Model integration
-- 🎯 **Modular Design**: Use individual extraction methods or scrape everything at once
-- 💾 **Multiple Output Formats**: Save as JSON or LLM-formatted text
-- 🚦 **Rate Limiting**: Built-in delays to respect server resources
+AccuraTraveller aims to be a comprehensive travel planning assistant that:
+1. **Personalizes itineraries** based on budget, group size, and location preferences
+2. **Scrapes real-time travel data** from multiple sources (attractions, hotels, activities)
+3. **Provides live weather updates** for informed decision-making
+4. **Predicts travel costs** based on duration, group size, and travel style
 
-## Installation
+---
+
+## ✅ Current Features (Implemented)
+
+### 1. Web Scraping System ✓
+- **Thrillophilia Scraper** (`example_usage.py`)
+  - Extracts attractions, activities, and points of interest
+  - Structured JSON output with titles, descriptions, images, and links
+  - Anti-bot detection with custom headers
+  
+- **Booking.com Scraper** (`kaggle_booking_scraper.py`)
+  - Extracts hotel listings with names, locations, prices, and star ratings
+  - Dynamic price extraction
+  - Structured hotel data in JSON format
+
+### 2. LLM-Based Summarization ✓
+- **Ollama Integration** (`llm_summarizer.py`)
+  - Summarizes scraped attraction data
+  - Summarizes hotel listings
+  - Generates combined travel guides
+  - Works offline with locally installed Ollama models
+  - No API server needed
+
+### 3. Data Storage ✓
+- JSON-based data storage
+- Structured outputs: `thrillophilia_pune_attractions.json`, `booking_hotels.json`
+- Generated summaries: `thrillophilia_summary.txt`, `booking_summary.txt`, `combined_travel_guide.txt`
+
+---
+
+## 🚧 Features In Development (Roadmap)
+
+### Phase 1: Enhance Web Scraping (In Progress)
+### Phase 2: Personalized Itinerary Generator (Planned)
+### Phase 3: Live Weather Integration (Planned)
+### Phase 4: Cost Prediction System (Planned)
+
+---
+
+## 📋 STEP-BY-STEP TO-DO LIST
+
+### **PHASE 1: ENHANCE WEB SCRAPING SYSTEM** 🕷️
+
+#### ✅ Completed Tasks
+- [x] Create Thrillophilia scraper for attractions
+- [x] Create Booking.com scraper for hotels
+- [x] Implement JSON data storage
+- [x] Add anti-bot headers
+- [x] Extract star ratings from hotels
+
+#### 🔲 Pending Tasks
+
+**Task 1.1: Add More Data Sources**
+- [ ] Create scraper for **Airbnb** (alternative accommodations)
+  - File: `airbnb_scraper.py`
+  - Extract: name, location, price per night, rating, amenities
+- [ ] Create scraper for **Google Flights** or **Skyscanner** (flight prices)
+  - File: `flight_scraper.py`
+  - Extract: departure/arrival times, prices, airlines, duration
+- [ ] Create scraper for **TripAdvisor** (reviews and ratings)
+  - File: `tripadvisor_scraper.py`
+  - Extract: reviews, ratings, tips
+- [ ] Create scraper for **Zomato/Swiggy** (restaurant info)
+  - File: `restaurant_scraper.py`
+  - Extract: name, cuisine, price range, ratings
+  - https://github.com/nikitperiwal/Zomato-Scraper/tree/master
+  - https://github.com/DeevanshiSharma/Swiggy-Delhi-Top-Restaurants-Dataset-Scraped/blob/master/main_updated.ipynb
+
+**Task 1.2: Improve Scraper Reliability**
+- [ ] Add **error handling** for network failures
+- [ ] Implement **retry mechanism** (3 attempts with exponential backoff)
+- [ ] Add **logging system** to track scraping success/failures
+  - File: `scraper_logger.py`
+- [ ] Create **scraper scheduler** for periodic updates
+  - File: `scheduler.py`
+  - Use: `schedule` or `APScheduler` library
+
+**Task 1.3: Handle Dynamic Content**
+- [ ] Add **Selenium support** for JavaScript-heavy pages
+  - Update existing scrapers or create: `selenium_scraper.py`
+- [ ] Implement **wait strategies** for dynamic content loading
+- [ ] Add **headless browser** option for faster scraping
+
+**Task 1.4: Data Validation & Cleaning**
+- [ ] Create **data validator** to check scraped data quality
+  - File: `data_validator.py`
+  - Check for: missing fields, invalid prices, broken links
+- [ ] Implement **data cleaning** functions
+  - Remove duplicates
+  - Normalize price formats (₹, $, €)
+  - Standardize date formats
+- [ ] Add **data enrichment** (extract coordinates from addresses)
+
+---
+
+### **PHASE 2: PERSONALIZED ITINERARY GENERATOR** 🗓️
+
+**Task 2.1: User Input System**
+- [ ] Create **user input handler**
+  - File: `user_input.py`
+  - Collect: destination, budget, travel dates, group size, preferences
+- [ ] Design **user preference questionnaire**
+  - Travel style: adventure, relaxation, cultural, family-friendly
+  - Interests: history, food, nature, shopping, nightlife
+  - Mobility: walking distance preferences, accessibility needs
+- [ ] Implement **budget category selection**
+  - Budget: ₹0-10k/day
+  - Mid-range: ₹10k-30k/day
+  - Luxury: ₹30k+/day
+
+**Task 2.2: Itinerary Generation Engine**
+- [ ] Create **itinerary generator core**
+  - File: `itinerary_generator.py`
+  - Use scraped data + user preferences
+- [ ] Implement **day-wise planning algorithm**
+  - Morning, afternoon, evening activities
+  - Optimize for location proximity (minimize travel time)
+  - Balance activity types (mix of attractions, food, rest)
+- [ ] Add **budget allocation** across itinerary
+  - Distribute budget: accommodation (40%), food (30%), activities (20%), transport (10%)
+- [ ] Create **LLM-based itinerary enhancement**
+  - Use Ollama to make itinerary more personalized
+  - Add contextual recommendations
+  - Generate day summaries
+
+**Task 2.3: Optimization & Constraints**
+- [ ] Implement **time optimization**
+  - Calculate travel time between locations
+  - Ensure activities fit within operating hours
+- [ ] Add **group size considerations**
+  - Solo traveler vs family vs group recommendations
+  - Suggest group-friendly activities
+- [ ] Implement **seasonal recommendations**
+  - Best time to visit attractions
+  - Weather-based activity suggestions
+
+**Task 2.4: Output & Formatting**
+- [ ] Create **itinerary formatter**
+  - File: `itinerary_formatter.py`
+  - Formats: PDF, JSON, HTML, text
+- [ ] Generate **daily schedules** with:
+  - Time slots
+  - Activity details
+  - Estimated costs
+  - Directions/maps links
+- [ ] Add **export options**
+  - Email itinerary
+  - Download as PDF
+  - Share link
+
+---
+
+### **PHASE 3: LIVE WEATHER INTEGRATION** 🌦️
+
+**Task 3.1: Weather API Integration**
+- [ ] Choose weather API provider
+  - Options: **OpenWeatherMap** (free tier), **WeatherAPI**, **AccuWeather**
+- [ ] Create **weather service module**
+  - File: `weather_service.py`
+  - Functions: get_current_weather(), get_forecast()
+- [ ] Add API key management
+  - File: `.env` (for storing API keys securely)
+  - Library: `python-dotenv`
+
+**Task 3.2: Weather Data Features**
+- [ ] Fetch **current weather** for destination
+  - Temperature, conditions, humidity, wind
+- [ ] Get **7-day forecast**
+  - Min/max temperatures
+  - Rain probability
+  - Weather warnings
+- [ ] Implement **hourly forecast** (24 hours)
+  - For detailed day planning
+
+**Task 3.3: Weather-Based Recommendations**
+- [ ] Create **activity recommender based on weather**
+  - File: `weather_recommender.py`
+  - Rainy day → indoor activities (museums, malls, restaurants)
+  - Hot day → beaches, water parks, AC venues
+  - Pleasant weather → outdoor activities, hiking, sightseeing
+- [ ] Add **weather alerts** to itinerary
+  - "Rain expected on Day 2 - consider indoor alternatives"
+- [ ] Implement **packing suggestions**
+  - Based on weather forecast
+  - "Bring umbrella", "Pack sunscreen", etc.
+
+**Task 3.4: Display & Integration**
+- [ ] Add weather display to itinerary output
+- [ ] Create **weather dashboard**
+  - Visual weather cards
+  - Temperature charts
+- [ ] Integrate with itinerary generator
+  - Automatically adjust activities based on weather
+
+---
+
+### **PHASE 4: TRAVEL COST PREDICTION SYSTEM** 💰
+
+**Task 4.1: Historical Data Collection**
+- [ ] Create **cost database**
+  - File: `cost_database.json` or use SQLite
+  - Store: accommodation costs, activity costs, food costs, transport costs
+- [ ] Implement **data collection from scrapers**
+  - Store historical price data
+  - Track price trends over time
+- [ ] Add **manual cost data entry**
+  - For items not scraped (local transport, misc expenses)
+
+**Task 4.2: Cost Prediction Model**
+- [ ] Create **cost calculator**
+  - File: `cost_predictor.py`
+  - Input: duration, group size, travel style, destination
+- [ ] Implement **base cost calculation**
+  - Accommodation: price × nights × rooms needed
+  - Activities: average cost × number of activities
+  - Food: per person per day × group size × days
+  - Transport: flights + local transport estimate
+- [ ] Add **group size adjustments**
+  - Shared accommodation discounts
+  - Group activity discounts
+  - Per-person vs per-group costs
+
+**Task 4.3: Travel Style Factors**
+- [ ] Define **travel style multipliers**
+  - Budget: 0.7x base cost
+  - Mid-range: 1.0x base cost
+  - Luxury: 2.0x base cost
+- [ ] Implement **seasonal pricing**
+  - Peak season: 1.5x cost
+  - Off-season: 0.8x cost
+- [ ] Add **destination-specific factors**
+  - Metro cities: higher cost
+  - Small towns: lower cost
+
+**Task 4.4: ML-Based Enhancement (Advanced)**
+- [ ] Collect training data
+  - Historical prices
+  - User feedback on actual costs
+- [ ] Train **simple regression model**
+  - Library: scikit-learn
+  - Features: duration, group size, destination, season, style
+  - Target: total cost
+- [ ] Implement **price trend prediction**
+  - Predict if prices will increase/decrease
+  - Suggest best booking time
+
+**Task 4.5: Cost Breakdown & Display**
+- [ ] Create **detailed cost breakdown**
+  - Category-wise costs (accommodation, food, etc.)
+  - Day-wise budget allocation
+- [ ] Add **budget vs actual tracking**
+  - Compare predicted vs actual costs (post-trip)
+- [ ] Implement **cost-saving suggestions**
+  - "Book 2 months in advance to save ₹5000"
+  - "Visit in October instead of December to save 30%"
+
+---
+
+### **PHASE 5: INTEGRATION & USER INTERFACE** 🖥️
+
+**Task 5.1: Backend Integration**
+- [ ] Create **main application controller**
+  - File: `main.py`
+  - Coordinates all modules
+- [ ] Implement **data flow pipeline**
+  - User input → Scraping → Weather → Cost prediction → Itinerary generation
+- [ ] Add **caching system**
+  - Cache scraped data for 24 hours
+  - Reduce API calls
+
+**Task 5.2: Command-Line Interface (CLI)**
+- [ ] Create **interactive CLI**
+  - File: `cli.py`
+  - Library: `click` or `argparse`
+- [ ] Add **menu-driven navigation**
+  - 1. Scrape new data
+  - 2. Generate itinerary
+  - 3. Check weather
+  - 4. Predict costs
+  - 5. View saved itineraries
+- [ ] Implement **progress indicators**
+  - Loading bars for scraping
+  - Status messages
+
+**Task 5.3: Web Interface (Optional)**
+- [ ] Choose framework
+  - **Streamlit** (easiest, fastest)
+  - Flask/FastAPI (more control)
+  - Gradio (good for AI apps)
+- [ ] Design **web UI pages**
+  - Home page with input form
+  - Results page with itinerary
+  - Weather page
+  - Cost estimation page
+- [ ] Add **interactive features**
+  - Edit itinerary
+  - Swap activities
+  - Adjust budget
+
+**Task 5.4: Output & Export**
+- [ ] Create **PDF generator**
+  - Library: `reportlab` or `fpdf`
+  - Include: itinerary, maps, weather, costs
+- [ ] Add **map visualization**
+  - Library: `folium` or Google Maps API
+  - Show route on map
+- [ ] Implement **share functionality**
+  - Generate shareable links
+  - Email itinerary
+
+---
+
+### **PHASE 6: TESTING & DEPLOYMENT** 🚀
+
+**Task 6.1: Testing**
+- [ ] Write **unit tests** for each module
+  - File: `tests/` directory
+  - Library: `pytest`
+- [ ] Perform **integration testing**
+  - Test end-to-end flow
+- [ ] Add **error handling tests**
+  - Network failures
+  - Invalid inputs
+  - API rate limits
+
+**Task 6.2: Documentation**
+- [ ] Write **API documentation**
+  - Document all functions
+  - Add docstrings
+- [ ] Create **user guide**
+  - File: `USER_GUIDE.md`
+  - Step-by-step instructions
+- [ ] Add **examples**
+  - Sample itineraries
+  - Example commands
+
+**Task 6.3: Performance Optimization**
+- [ ] Profile code for bottlenecks
+- [ ] Implement **parallel scraping**
+  - Use `concurrent.futures` or `asyncio`
+- [ ] Optimize **LLM prompts**
+  - Reduce token usage
+  - Faster generation
+
+**Task 6.4: Deployment**
+- [ ] Containerize with **Docker**
+  - File: `Dockerfile`
+- [ ] Deploy to **cloud platform**
+  - Options: Heroku, AWS, Google Cloud, Azure
+- [ ] Set up **CI/CD pipeline**
+  - GitHub Actions
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+- Python 3.8+
+- Ollama installed locally ([Download](https://ollama.ai/download))
+
+### Setup
 
 ```bash
+# Clone repository
+git clone https://github.com/SwayamChandak/accuraTraveller.git
+cd accuraTraveller/accuraTraveller
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Install and setup Ollama
+ollama pull llama3.2
+
+# Run the summarizer
+python llm_summarizer.py
 ```
 
-## Quick Start
+---
 
-```python
-from tripadvisor_scraper import TripAdvisorScraper
+## 🛠️ Technology Stack
 
-# Initialize scraper
-scraper = TripAdvisorScraper(delay=2.0)
+### Current
+- **Python 3.x** - Core language
+- **BeautifulSoup4** - HTML parsing
+- **Requests** - HTTP requests
+- **Ollama** - LLM integration
+- **JSON** - Data storage
 
-# Scrape a page
-url = "https://www.tripadvisor.com/[YOUR-TRIPADVISOR-URL]"
-data = scraper.scrape_page(url)
+### Planned
+- **Selenium** - Dynamic content scraping
+- **OpenWeatherMap API** - Weather data
+- **Scikit-learn** - Cost prediction ML
+- **Streamlit/Flask** - Web interface
+- **Folium** - Map visualization
+- **ReportLab** - PDF generation
+- **SQLite** - Database for cost history
+- **APScheduler** - Task scheduling
+- **Pytest** - Testing
 
-# Save results
-scraper.save_to_json(data, 'output.json')
+---
 
-# Format for LLM
-llm_input = scraper.format_for_llm(data)
-print(llm_input)
-```
-
-## What Can Be Extracted?
-
-The scraper extracts:
-
-1. **Text Content**
-   - Page title
-   - Headings (h1-h6)
-   - Paragraphs
-   - Lists
-   - Meta tags
-
-2. **Reviews**
-   - Review text
-   - Ratings
-   - Titles
-   - Dates
-   - Authors
-
-3. **Ratings Summary**
-   - Overall rating
-   - Total review count
-   - Rating distribution
-
-4. **Location Information**
-   - Address
-   - City/Country
-   - Coordinates (when available)
-
-5. **Amenities/Features**
-   - List of amenities or features mentioned
-
-6. **Links**
-   - Internal links
-   - External links
-   - Image URLs
-
-## Usage Examples
-
-### Basic Scraping
-
-```python
-from tripadvisor_scraper import TripAdvisorScraper
-
-scraper = TripAdvisorScraper(delay=2.0)
-data = scraper.scrape_page("https://www.tripadvisor.com/...")
-
-print(f"Title: {data['content']['title']}")
-print(f"Reviews found: {len(data['reviews'])}")
-print(f"Overall rating: {data['ratings']['overall_rating']}")
-```
-
-### Scrape Multiple Pages
-
-```python
-urls = [
-    "https://www.tripadvisor.com/Hotel_Review-...",
-    "https://www.tripadvisor.com/Restaurant_Review-...",
-    "https://www.tripadvisor.com/Attraction_Review-..."
-]
-
-results = scraper.scrape_multiple_pages(urls)
-```
-
-### LLM Integration
-
-```python
-# Scrape and format for LLM
-data = scraper.scrape_page(url)
-llm_input = scraper.format_for_llm(data)
-
-# Use with your LLM
-# response = your_llm.generate(
-#     prompt=f"Analyze this TripAdvisor page:\n\n{llm_input}"
-# )
-```
-
-### Custom Extraction
-
-```python
-# Fetch page once
-soup = scraper.fetch_page(url)
-
-# Use specific extraction methods
-reviews = scraper.extract_reviews(soup)
-ratings = scraper.extract_ratings_summary(soup)
-amenities = scraper.extract_amenities(soup)
-location = scraper.extract_location_info(soup)
-```
-
-### Search Reviews by Keyword
-
-```python
-data = scraper.scrape_page(url)
-
-# Find reviews mentioning specific keywords
-keyword = "service"
-matching_reviews = [
-    review for review in data['reviews']
-    if keyword.lower() in review.get('text', '').lower()
-]
-
-print(f"Found {len(matching_reviews)} reviews mentioning '{keyword}'")
-```
-
-## Output Format
-
-### JSON Structure
-
-```json
-{
-  "url": "https://www.tripadvisor.com/...",
-  "scraped_at": "2025-11-02 10:30:00",
-  "content": {
-    "title": "Page Title",
-    "headings": [...],
-    "paragraphs": [...],
-    "lists": [...],
-    "metadata": {...}
-  },
-  "reviews": [
-    {
-      "rating": 5.0,
-      "title": "Review Title",
-      "text": "Review text...",
-      "date": "October 2025",
-      "author": "Username"
-    }
-  ],
-  "ratings": {
-    "overall_rating": 4.5,
-    "total_reviews": 1234
-  },
-  "amenities": [...],
-  "location": {...},
-  "links": {...}
-}
-```
-
-### LLM-Formatted Text
-
-The scraper formats data into clean, readable text perfect for LLM prompts:
+## 📁 Project Structure
 
 ```
-TITLE: Hotel Name - TripAdvisor
-
-HEADINGS:
-  # Main Heading
-  ## Sub Heading
-
-RATINGS:
-  Overall: 4.5
-  Total Reviews: 1234
-
-LOCATION: 123 Main St, City, Country
-
-AMENITIES:
-  - Free WiFi
-  - Pool
-  - Restaurant
-
-REVIEWS:
-Review 1:
-  Rating: 5.0
-  Title: Amazing experience
-  Text: This place was wonderful...
-  Date: October 2025
-...
+AccuraTraveller/
+├── accuraTraveller/
+│   ├── example_usage.py              # Thrillophilia scraper
+│   ├── kaggle_booking_scraper.py     # Booking.com scraper
+│   ├── llm_summarizer.py             # Ollama LLM integration
+│   ├── requirements.txt              # Dependencies
+│   ├── thrillophilia_pune_attractions.json
+│   ├── booking_hotels.json
+│   ├── combined_travel_guide.txt
+│   │
+│   ├── [TO BE CREATED]
+│   ├── airbnb_scraper.py             # Phase 1
+│   ├── flight_scraper.py             # Phase 1
+│   ├── weather_service.py            # Phase 3
+│   ├── cost_predictor.py             # Phase 4
+│   ├── itinerary_generator.py        # Phase 2
+│   ├── main.py                       # Phase 5
+│   └── cli.py                        # Phase 5
+│
+└── README.md
 ```
 
-## Advanced Features
+---
 
-### Rate Limiting
+## 🎯 Quick Start Guide
 
-The scraper includes built-in delays between requests:
+### Current Usage
 
-```python
-# Adjust delay (in seconds) when initializing
-scraper = TripAdvisorScraper(delay=3.0)  # 3 second delay
+1. **Scrape Attractions (Thrillophilia)**
+```bash
+python example_usage.py
 ```
 
-### Custom Headers
-
-The scraper uses realistic browser headers to avoid blocks. Headers are configured automatically.
-
-### Error Handling
-
-The scraper handles common errors gracefully:
-
-```python
-data = scraper.scrape_page(url)
-if 'error' in data:
-    print(f"Scraping failed: {data['error']}")
+2. **Scrape Hotels (Booking.com)**
+```bash
+python kaggle_booking_scraper.py
 ```
 
-## LLM Integration Ideas
-
-1. **Sentiment Analysis**: Analyze review sentiment
-2. **Summary Generation**: Create summaries of all reviews
-3. **Question Answering**: Answer questions about the location
-4. **Comparison**: Compare multiple locations
-5. **Recommendation**: Generate personalized recommendations
-6. **Translation**: Translate reviews to other languages
-7. **Trend Analysis**: Identify common themes in reviews
-
-## Important Notes
-
-⚠️ **Legal and Ethical Considerations**:
-- Always check TripAdvisor's Terms of Service
-- Respect robots.txt
-- Use appropriate delays between requests
-- Don't overload their servers
-- Consider using TripAdvisor's official API if available
-- Only scrape public data
-- Comply with data protection regulations
-
-## Tips for Best Results
-
-1. **Use Specific URLs**: Works best with specific listing pages (hotels, restaurants, attractions)
-2. **Check Robots.txt**: Verify that scraping is allowed
-3. **Handle Dynamic Content**: Some content may load via JavaScript (consider using Selenium for such cases)
-4. **Regular Updates**: TripAdvisor may change their HTML structure; update selectors as needed
-5. **Error Handling**: Always check if data extraction succeeded
-
-## Troubleshooting
-
-**No data extracted?**
-- Check if the URL is valid
-- TripAdvisor may have changed their HTML structure
-- Try updating the class name patterns in the code
-
-**Getting blocked?**
-- Increase the delay between requests
-- Use a proxy or VPN
-- Reduce the number of requests
-
-**Missing reviews?**
-- Reviews may load dynamically via JavaScript
-- Consider using Selenium for JavaScript-heavy pages
-
-## Future Enhancements
-
-- [ ] Add Selenium support for dynamic content
-- [ ] Implement proxy rotation
-- [ ] Add caching to avoid re-scraping
-- [ ] Support for pagination
-- [ ] Export to CSV/Excel
-- [ ] GUI interface
-- [ ] Direct LLM API integration
-
-## Example Workflow with LLM
-
-```python
-# 1. Scrape data
-scraper = TripAdvisorScraper()
-data = scraper.scrape_page(url)
-
-# 2. Format for LLM
-llm_text = scraper.format_for_llm(data)
-
-# 3. Send to LLM (example with OpenAI)
-# import openai
-# response = openai.ChatCompletion.create(
-#     model="gpt-4",
-#     messages=[{
-#         "role": "user",
-#         "content": f"Analyze this TripAdvisor listing and provide insights:\n\n{llm_text}"
-#     }]
-# )
-# print(response.choices[0].message.content)
+3. **Generate Travel Summary with LLM**
+```bash
+python llm_summarizer.py
+# Choose option 3 for combined travel guide
 ```
 
-## Contributing
+### Future Usage (After Phase 5)
 
-Feel free to enhance this scraper! Some ideas:
-- Add support for more page types
-- Improve extraction patterns
-- Add tests
-- Optimize performance
+```bash
+python main.py
+# Interactive menu will guide you through:
+# 1. Enter destination and preferences
+# 2. Generate personalized itinerary
+# 3. View weather forecast
+# 4. Get cost estimation
+# 5. Export itinerary as PDF
+```
 
-## License
+---
 
-This is a educational project. Use responsibly and ethically.
+## 🤝 Contributing
+
+This is an active development project. Contributions are welcome!
+
+### Priority Areas
+1. Adding new scrapers (Airbnb, Flights, etc.)
+2. Weather API integration
+3. Cost prediction algorithm
+4. UI/UX improvements
+
+---
+
+## 📊 Progress Tracker
+
+| Phase | Feature | Status | Priority |
+|-------|---------|--------|----------|
+| 1 | Web Scraping (Basic) | ✅ Done | - |
+| 1 | Add More Scrapers | 🔲 To Do | High |
+| 1 | Selenium Support | 🔲 To Do | Medium |
+| 2 | User Input System | 🔲 To Do | High |
+| 2 | Itinerary Generator | 🔲 To Do | High |
+| 2 | Budget Allocation | 🔲 To Do | High |
+| 3 | Weather API | 🔲 To Do | High |
+| 3 | Weather Recommendations | 🔲 To Do | Medium |
+| 4 | Cost Database | 🔲 To Do | High |
+| 4 | Cost Predictor | 🔲 To Do | High |
+| 4 | ML Model | 🔲 To Do | Low |
+| 5 | CLI Interface | 🔲 To Do | Medium |
+| 5 | Web Interface | 🔲 To Do | Low |
+| 5 | PDF Export | 🔲 To Do | Medium |
+
+---
+
+## 📝 License
+
+Educational project. Use responsibly and ethically.
+
+---
+
+## 📧 Contact
+
+**Developer:** Swayam Chandak  
+**GitHub:** [@SwayamChandak](https://github.com/SwayamChandak)  
+**Repository:** [AccuraTraveller](https://github.com/SwayamChandak/accuraTraveller)
+
+---
+
+## 🙏 Acknowledgments
+
+- BeautifulSoup4 for HTML parsing
+- Ollama for local LLM capabilities
+- Open-source community for various libraries
+
+---
+
+**Last Updated:** November 11, 2025  
+**Version:** 0.1.0 (Early Development)
