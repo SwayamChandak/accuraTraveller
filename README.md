@@ -38,13 +38,25 @@ AccuraTraveller aims to be a comprehensive travel planning assistant that:
 - Structured outputs: `thrillophilia_pune_attractions.json`, `booking_hotels.json`
 - Generated summaries: `thrillophilia_summary.txt`, `booking_summary.txt`, `combined_travel_guide.txt`
 
+### 4. Live Weather Integration ✓
+- **OpenWeatherMap API Integration** (`weather_service.py`)
+  - Geocoding API to convert city names to coordinates
+  - Current weather data (temperature, humidity, wind, visibility)
+  - 5-day weather forecast with 3-hour intervals
+  - Weather-based travel recommendations
+  - Secure API key management with .env file
+- **Example Usage** (`weather_example.py`)
+  - Multiple city weather comparison
+  - Travel planning weather checks
+  - Forecast display and analysis
+
 ---
 
 ## 🚧 Features In Development (Roadmap)
 
 ### Phase 1: Enhance Web Scraping (In Progress)
 ### Phase 2: Personalized Itinerary Generator (Planned)
-### Phase 3: Live Weather Integration (Planned)
+### Phase 3: Live Weather Integration ✅ COMPLETED
 ### Phase 4: Cost Prediction System (Planned)
 
 ---
@@ -162,46 +174,55 @@ AccuraTraveller aims to be a comprehensive travel planning assistant that:
 
 ---
 
-### **PHASE 3: LIVE WEATHER INTEGRATION** 🌦️
+### **PHASE 3: LIVE WEATHER INTEGRATION** 🌦️ ✅ COMPLETED
 
-**Task 3.1: Weather API Integration**
-- [ ] Choose weather API provider
-  - Options: **OpenWeatherMap** (free tier), **WeatherAPI**, **AccuWeather**
-- [ ] Create **weather service module**
-  - File: `weather_service.py`
-  - Functions: get_current_weather(), get_forecast()
-- [ ] Add API key management
-  - File: `.env` (for storing API keys securely)
-  - Library: `python-dotenv`
+**Task 3.1: Weather API Integration** ✅
+- [x] Choose weather API provider
+  - Options: **OpenWeatherMap** (free tier), 
+  **WeatherAPI**, **AccuWeather**
 
-**Task 3.2: Weather Data Features**
-- [ ] Fetch **current weather** for destination
+  - geocoding api: https://openweathermap.org/api/geocoding-api
+  - openweather api: https://openweathermap.org/current
+- [x] Create **weather service module**
+  - File: `weather_service.py` ✅ Created
+  - Functions: get_current_weather(), get_forecast(), get_coordinates()
+- [x] Add API key management
+  - File: `.env.example` ✅ Created
+  - Library: `python-dotenv` ✅ Added
+
+**Task 3.2: Weather Data Features** ✅
+- [x] Fetch **current weather** for destination
   - Temperature, conditions, humidity, wind
-- [ ] Get **7-day forecast**
+- [x] Get **5-day forecast** (OpenWeatherMap free tier provides 5 days)
   - Min/max temperatures
   - Rain probability
   - Weather warnings
-- [ ] Implement **hourly forecast** (24 hours)
+- [x] Implement **3-hour forecast intervals**
   - For detailed day planning
 
-**Task 3.3: Weather-Based Recommendations**
-- [ ] Create **activity recommender based on weather**
-  - File: `weather_recommender.py`
+**Task 3.3: Weather-Based Recommendations** ✅
+- [x] Create **activity recommender based on weather**
+  - File: `weather_example.py` ✅ Created (includes travel_weather_check function)
   - Rainy day → indoor activities (museums, malls, restaurants)
   - Hot day → beaches, water parks, AC venues
   - Pleasant weather → outdoor activities, hiking, sightseeing
-- [ ] Add **weather alerts** to itinerary
-  - "Rain expected on Day 2 - consider indoor alternatives"
-- [ ] Implement **packing suggestions**
+- [x] Add **weather alerts** to recommendations
+  - Temperature-based suggestions
+  - Rain alerts
+  - Humidity warnings
+- [x] Implement **packing suggestions**
   - Based on weather forecast
   - "Bring umbrella", "Pack sunscreen", etc.
 
-**Task 3.4: Display & Integration**
-- [ ] Add weather display to itinerary output
-- [ ] Create **weather dashboard**
-  - Visual weather cards
-  - Temperature charts
-- [ ] Integrate with itinerary generator
+**Task 3.4: Display & Integration** ✅
+- [x] Add weather display formatting
+  - print_current_weather() method
+  - print_forecast() method
+- [x] Create **weather data export**
+  - JSON export functionality
+  - Structured weather data format
+- [x] Integration ready
+  - Can be easily integrated with itinerary generator
   - Automatically adjust activities based on weather
 
 ---
@@ -369,6 +390,7 @@ AccuraTraveller aims to be a comprehensive travel planning assistant that:
 ### Prerequisites
 - Python 3.8+
 - Ollama installed locally ([Download](https://ollama.ai/download))
+- OpenWeatherMap API key ([Get Free Key](https://openweathermap.org/api))
 
 ### Setup
 
@@ -383,7 +405,17 @@ pip install -r requirements.txt
 # Install and setup Ollama
 ollama pull llama3.2
 
-# Run the summarizer
+# Setup Weather API
+# 1. Copy .env.example to .env
+cp .env.example .env
+
+# 2. Edit .env and add your OpenWeatherMap API key
+# OPENWEATHER_API_KEY=your_actual_api_key_here
+
+# Run weather service example
+python weather_example.py
+
+# Run the LLM summarizer
 python llm_summarizer.py
 ```
 
@@ -395,12 +427,13 @@ python llm_summarizer.py
 - **Python 3.x** - Core language
 - **BeautifulSoup4** - HTML parsing
 - **Requests** - HTTP requests
-- **Ollama** - LLM integration
+- **Ollama** - LLM integration (offline)
+- **OpenWeatherMap API** - Weather data
+- **python-dotenv** - Environment variable management
 - **JSON** - Data storage
 
 ### Planned
 - **Selenium** - Dynamic content scraping
-- **OpenWeatherMap API** - Weather data
 - **Scikit-learn** - Cost prediction ML
 - **Streamlit/Flask** - Web interface
 - **Folium** - Map visualization
@@ -419,15 +452,23 @@ AccuraTraveller/
 │   ├── example_usage.py              # Thrillophilia scraper
 │   ├── kaggle_booking_scraper.py     # Booking.com scraper
 │   ├── llm_summarizer.py             # Ollama LLM integration
+│   ├── weather_service.py            # ✅ Weather API service
+│   ├── weather_example.py            # ✅ Weather usage examples
 │   ├── requirements.txt              # Dependencies
+│   ├── .env.example                  # ✅ API key template
+│   ├── .gitignore                    # ✅ Protect sensitive files
 │   ├── thrillophilia_pune_attractions.json
 │   ├── booking_hotels.json
 │   ├── combined_travel_guide.txt
 │   │
+│   ├── zomato/                       # 🔄 In Progress
+│   │   ├── info_scraper.py           # Restaurant info
+│   │   ├── menu_scraper.py           # Menu details
+│   │   └── review_scraper.py         # Reviews
+│   │
 │   ├── [TO BE CREATED]
 │   ├── airbnb_scraper.py             # Phase 1
 │   ├── flight_scraper.py             # Phase 1
-│   ├── weather_service.py            # Phase 3
 │   ├── cost_predictor.py             # Phase 4
 │   ├── itinerary_generator.py        # Phase 2
 │   ├── main.py                       # Phase 5
@@ -452,10 +493,34 @@ python example_usage.py
 python kaggle_booking_scraper.py
 ```
 
-3. **Generate Travel Summary with LLM**
+3. **Check Weather for Travel Destination**
+```bash
+# Setup API key first (see Installation section)
+python weather_example.py
+```
+
+4. **Generate Travel Summary with LLM**
 ```bash
 python llm_summarizer.py
 # Choose option 3 for combined travel guide
+```
+
+### API Usage Examples
+
+**Weather Service:**
+```python
+from weather_service import WeatherService
+
+# Initialize
+weather = WeatherService(api_key="your_api_key")
+
+# Get current weather
+data = weather.get_weather_by_city("Mumbai")
+weather.print_current_weather(data)
+
+# Get 5-day forecast
+forecast = weather.get_forecast_by_city("Goa", days=3)
+weather.print_forecast(forecast)
 ```
 
 ### Future Usage (After Phase 5)
@@ -478,9 +543,10 @@ This is an active development project. Contributions are welcome!
 
 ### Priority Areas
 1. Adding new scrapers (Airbnb, Flights, etc.)
-2. Weather API integration
+2. ~~Weather API integration~~ ✅ DONE
 3. Cost prediction algorithm
 4. UI/UX improvements
+5. Personalized itinerary generation
 
 ---
 
@@ -489,13 +555,15 @@ This is an active development project. Contributions are welcome!
 | Phase | Feature | Status | Priority |
 |-------|---------|--------|----------|
 | 1 | Web Scraping (Basic) | ✅ Done | - |
-| 1 | Add More Scrapers | 🔲 To Do | High |
+| 1 | Add More Scrapers | � In Progress | High |
 | 1 | Selenium Support | 🔲 To Do | Medium |
 | 2 | User Input System | 🔲 To Do | High |
 | 2 | Itinerary Generator | 🔲 To Do | High |
 | 2 | Budget Allocation | 🔲 To Do | High |
-| 3 | Weather API | 🔲 To Do | High |
-| 3 | Weather Recommendations | 🔲 To Do | Medium |
+| 3 | Weather API | ✅ Done | - |
+| 3 | Weather Recommendations | ✅ Done | - |
+| 3 | Geocoding Service | ✅ Done | - |
+| 3 | Forecast Display | ✅ Done | - |
 | 4 | Cost Database | 🔲 To Do | High |
 | 4 | Cost Predictor | 🔲 To Do | High |
 | 4 | ML Model | 🔲 To Do | Low |

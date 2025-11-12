@@ -3,3 +3,6 @@ requests==2.31.0
 
 # For LLM summarization with Ollama
 ollama==0.3.3
+
+# For environment variables (API keys)
+python-dotenv==1.0.0
